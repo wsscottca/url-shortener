@@ -23,7 +23,7 @@ def test_validate_url():
 
 def test_validate_url_invalid():
     try:
-        short_url = validate_short_url("587ec2a0")
+        validate_short_url("587ec2a0")
     except exceptions.KeyExistsError as KeyExistsError:
         assert type(KeyExistsError) == exceptions.KeyExistsError
         assert KeyExistsError.status_code == 422

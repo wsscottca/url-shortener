@@ -36,7 +36,7 @@ def list_urls() -> Dict[int, Url_Pair_VM]:
     return url_pairs
 
 @app.get("/{short_url}", status_code=307)
-def redirect(short_url: str):
+def redirect(short_url: str) -> RedirectResponse:
     url = get_redirect_url(short_url)
     return RedirectResponse(url)
 

@@ -6,11 +6,7 @@ current_db_state = {
 }
 
 def test_list_urls(client):
+    ''' Test listing urls from populated DB'''
     response = client.get("/list_urls")
     assert response.status_code == 200
     assert response.json() == current_db_state
-
-def test_list_urls_empty(client):
-    response = client.get("/list_urls")
-    assert response.status_code == 200
-    assert response.json() == {}

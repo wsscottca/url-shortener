@@ -31,15 +31,20 @@ def validate_short_url(short_url: str | None) -> str:
     else:
         raise exceptions.KeyExistsError(422, "Short URL already exists, please enter a new short URL.")
 
-def generate_short_url(validate: bool = True) -> str:
+def generate_short_url() -> str:
+    '''
+    Generates a valid short url that does not cause a collision
+
+    Returns:
+    str: Valid generated short url that does not cause a collision
+    '''
     short_url = None
 
     # Generate a shortuuid until we found one that isn't already in use
     while not short_url:
         try:
             short_url = ShortUUID().random(length=8)
-            if validate:
-                validate_short_url(short_url)
+            short_url = validate_short_url(short_url)
             return short_url
         except exceptions.KeyExistsError:
             short_url = None

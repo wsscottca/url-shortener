@@ -43,7 +43,6 @@ def test_shorten_url_valid(client):
                             }
     
 def test_shorten_url_invalid(client):
-    
         # Same as valid, as valid creates a short_url making the second request a collision
         response = client.post("/shorten_url?url=https%3A%2F%2Fwww.google.com%2F&short_url=testing1")
         assert response.status_code == 422

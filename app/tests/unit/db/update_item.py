@@ -1,6 +1,6 @@
 from moto import mock_aws
-from db.create_tables import create_table
-from models.url_pair import Url_Pair
+from db.services.create_tables import create_table
+from db.models.url_pair import Url_Pair
 
 @mock_aws
 def test_add_url_pair():

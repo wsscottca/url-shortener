@@ -1,6 +1,8 @@
-from api.shorten_url import generate_short_url, validate_short_url
-from models.url_pair import Url_Pair
+import logging
+from api.generate_short_url import generate_short_url
+from db.models.url_pair import Url_Pair
 from api import exceptions
+from db.services.validate_url_unique import validate_url_unique
 
 current_db_state = {
   "587ec2a0": "https://www.google.com/",
@@ -18,12 +20,12 @@ def clear_url():
         pass
 
 def test_validate_url():
-    short_url = validate_short_url("12345678")
+    short_url = validate_url_unique("12345678")
     assert short_url == "12345678"
 
 def test_validate_url_invalid():
     try:
-        validate_short_url("587ec2a0")
+        validate_url_unique("587ec2a0")
     except exceptions.KeyExistsError as KeyExistsError:
         assert type(KeyExistsError) == exceptions.KeyExistsError
         assert KeyExistsError.status_code == 422
@@ -43,7 +45,7 @@ def test_shorten_url_valid(client):
                             }
     
 def test_shorten_url_invalid(client):
-        # Same as valid, as valid creates a short_url making the second request a collision
-        response = client.post("/shorten_url?url=https%3A%2F%2Fwww.google.com%2F&short_url=testing1")
-        assert response.status_code == 422
-        assert response.json() == { "detail": "Short URL already exists, please enter a new short URL." }
+    # Same as valid, as valid creates a short_url making the second request a collision
+    response = client.post("/shorten_url?url=https%3A%2F%2Fwww.google.com%2F&short_url=testing1")
+    assert response.status_code == 422
+    assert response.json() == { "detail": "Short URL already exists, please enter a new short URL." }

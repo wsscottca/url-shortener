@@ -1,4 +1,7 @@
 import logging
+
+from fastapi.testclient import TestClient
+import pytest
 from api.generate_short_url import generate_short_url
 from db.models.url_pair import Url_Pair
 from api import exceptions
@@ -14,37 +17,44 @@ current_db_state = {
 }
 
 def clear_url():
+    # Clear out pair created for testing
     try:
         Url_Pair.get("testing1").delete()
     except:
         pass
 
 def test_validate_url():
+    # Ensure validate_url_unique returns the short_url back if it is unique
     short_url = validate_url_unique("12345678")
     assert short_url == "12345678"
 
 def test_validate_url_invalid():
-    try:
+    # Verify that if a key already exists we get the proper error
+    with pytest.raises(exceptions.KeyExistsError) as KeyExistsError:
         validate_url_unique("587ec2a0")
-    except exceptions.KeyExistsError as KeyExistsError:
         assert type(KeyExistsError) == exceptions.KeyExistsError
+        # As well as the proper HTTP code and detail msg
         assert KeyExistsError.status_code == 422
         assert KeyExistsError.detail == "Short URL already exists, please enter a new short URL."
 
 def test_generate_url():
+    # Test generating a short url
     short_url = generate_short_url()
+    # Validate it is the correct length
     assert len(short_url) == 8
     assert type(short_url) == str
 
-def test_shorten_url_valid(client):
+def test_shorten_url_valid(client: TestClient):
+    # Test shortening a URL that does not already exist
     response = client.post("/shorten_url?url=https%3A%2F%2Fwww.google.com%2F&short_url=testing1")
+    # Ensure we get the correct response code (201 CREATED) and that the response returns the created pair
     assert response.status_code == 201
     assert response.json() == {
                             "short_url": "https://127.0.0.1:8000/testing1",
                             "url": current_db_state["testing1"]
                             }
     
-def test_shorten_url_invalid(client):
+def test_shorten_url_invalid(client: TestClient):
     # Same as valid, as valid creates a short_url making the second request a collision
     response = client.post("/shorten_url?url=https%3A%2F%2Fwww.google.com%2F&short_url=testing1")
     assert response.status_code == 422

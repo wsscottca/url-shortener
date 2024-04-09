@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from fastapi import FastAPI
 from tests.perform_tests import perform_tests

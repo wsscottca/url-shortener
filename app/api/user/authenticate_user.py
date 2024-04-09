@@ -1,19 +1,21 @@
 from api.auth.verify_password import verify_password
-from api.user.get_user import get_user
+from db.services.get_user import get_user
 from db.models.user import User
 
 
-async def authenticate_user(username: str, password: str) -> User | bool:
+def authenticate_user(username: str, password: str) -> User | bool:
     '''
-    Gets the current User from the DB
+    Validates the user's password
     
     Args:
-        token (str): jwt token that depends OAuth2 flow for authentication using a bearer token obtained with a password
+        username (str): username of user to authenticate
+        password (str): password of user to authenticate
 
     Returns:
-        User: The current user
+        User: The authenticated
+        bool: False if the user cannot be authenticated
     '''
-    user = await get_user(username)
+    user = get_user(username)
     if not verify_password(password, user.password):
         return False
     

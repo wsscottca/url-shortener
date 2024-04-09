@@ -1,3 +1,8 @@
+import logging
+from fastapi.testclient import TestClient
+from tests.integration.auth.token import test_token
+
+
 current_db_state = {
   "0":{"short_url": "587ec2a0", "url": "https://www.google.com/"},
   "1":{"short_url": "f4256843", "url": "https://www.bing.com/"},
@@ -5,8 +10,8 @@ current_db_state = {
   "3":{"short_url": "JHiTvkTu", "url": "https://www.facebook.com/"}
 }
 
-def test_list_urls(client):
+def test_list_urls(client: TestClient):
     ''' Test listing urls from populated DB'''
-    response = client.get("/list_urls")
+    response = client.get("/list_urls", headers={"Authorization": f"Bearer {test_token(client).access_token}"})
     assert response.status_code == 200
     assert response.json() == current_db_state

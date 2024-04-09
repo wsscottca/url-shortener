@@ -38,11 +38,11 @@ def shorten_url(url: HttpUrl, short_url: str = None) -> Dict[str, str]:
         }
 
 @api_router.get("/list_urls")
-async def list_urls(token: Annotated[str, Depends(oauth2_scheme)]) -> Dict[int, Url_Pair_VM]:
-    user = await get_current_user(token)
+def list_urls(token: Annotated[str, Depends(oauth2_scheme)]) -> Dict[int, Url_Pair_VM]:
+    user = get_current_user(token)
     validate_user_permissions(user, "admin")
 
-    url_pairs = await get_urls()
+    url_pairs = get_urls()
     return url_pairs
 
 @api_router.get("/{short_url}", status_code=307)

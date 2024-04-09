@@ -12,8 +12,8 @@ from api.user.authenticate_user import authenticate_user
 auth_router = APIRouter()
 
 @auth_router.post("/token")
-async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> Token:
-    user = await authenticate_user(form_data.username, form_data.password)
+def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> Token:
+    user = authenticate_user(form_data.username, form_data.password)
     token_expiration = timedelta(minutes=TOKEN_EXPIRE_MINUTES)
-    token = create_token(data={"sub": user.username, "scopes": form_data.scopes}, expires_delta=token_expiration)
+    token = create_token(data={"sub": user.username}, expires_delta=token_expiration)
     return Token(access_token=token, token_type="bearer")

@@ -31,7 +31,7 @@ def test_generate_short_url_unique(mock_get):
     short_url = generate_short_url()
     assert len(short_url) == 8
 
-@patch('db.services.validate_url_unique.validate_url_unique')
+@patch('api.generate_short_url.validate_url_unique')
 def test_generate_short_url_collision(mock_validate):
     # Setup the mock to return a valid response, simulating a collision in short URL
     # validate that generate_short_url returns still returns a valid short_url
@@ -40,4 +40,7 @@ def test_generate_short_url_collision(mock_validate):
                             "12345678"
                             ]
 
-    assert generate_short_url() == "12345678"
+    
+    short_url = generate_short_url()
+    mock_validate.assert_called()
+    assert short_url == "12345678"

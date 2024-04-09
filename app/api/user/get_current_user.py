@@ -7,10 +7,10 @@ from api.auth.decode_token import decode_token
 from api.exceptions import CredentialError
 from api.models.token import TokenData
 from db.models.user import User
-from api.user.get_user import get_user
+from db.services.get_user import get_user
 from api.auth.dependencies import oauth2_scheme
 
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> User:
+def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> User:
     '''
     Gets the current User from the DB
     
@@ -39,5 +39,5 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> Use
         raise CredentialError(401, repr(ex))
     
     # If we successfully get the username from the token, get the user from the db
-    user = await get_user(username=token_data.username)
+    user = get_user(username=token_data.username)
     return user

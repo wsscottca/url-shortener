@@ -11,7 +11,7 @@ class KeyExistsError(HTTPException):
         status_code (int): HTTP Status Code
         detail (str): Message to be sent to the client detailing the error
     '''
-    def __init__(self, status_code: int, detail: str):
+    def __init__(self, status_code: int, detail: any):
         self.status_code = status_code
         self.detail = detail
 

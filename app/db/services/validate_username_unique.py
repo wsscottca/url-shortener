@@ -22,4 +22,4 @@ def validate_user_unique(username: str) -> str:
     except User.DoesNotExist:
         return username
     else:
-        raise exceptions.KeyExistsError(422, "Short URL already exists, please enter a new short URL.")
+        raise exceptions.KeyExistsError(422, "Username already exists, please select a different username.")

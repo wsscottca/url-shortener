@@ -1,7 +1,7 @@
 import api.exceptions as ex
 from db.models.user import User
 
-async def get_user(username: str) -> User:
+def get_user(username: str) -> User:
     '''
     Gets a User from the DB
     

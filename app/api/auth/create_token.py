@@ -7,10 +7,10 @@ from api.auth.dependencies import ALGORITHM, SECRET_KEY
 
 def create_token(data: dict, expires_delta: timedelta = timedelta(minutes=30)) -> str:
     '''
-    Creates a JWT token based on the subject with expiration 
+    Creates a JWT token based on the data with expiration 
 
     Args:
-    subject (str | Any): Subject to encode
+    data (dict): Data to encode
     expires_delta (int): Hashed password to validate against
 
     Returns:

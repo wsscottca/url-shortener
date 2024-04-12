@@ -3,7 +3,7 @@ from typing import Dict
 from api.models.url_pair import Url_Pair_VM
 from db.models.url_pair import Url_Pair
 
-async def get_urls() -> Dict[int, Url_Pair_VM]:
+def get_urls() -> Dict[int, Url_Pair_VM]:
     '''
     Return all short url - original url pairs currently in the DB
     

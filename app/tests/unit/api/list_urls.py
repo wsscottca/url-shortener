@@ -1,8 +1,11 @@
 from unittest.mock import patch
+
+from fastapi import HTTPException
+import pytest
 from db.services.list_urls import get_urls
 from db.models.url_pair import Url_Pair
 
-@patch('db.models.url_pair.Url_Pair.scan')
+@patch('db.services.list_urls.Url_Pair.scan')
 def test_list_url_pairs_empty(mock_scan):
     # Setup the mock to return an empty db
     mock_scan.return_value = []
@@ -12,7 +15,7 @@ def test_list_url_pairs_empty(mock_scan):
     url_pairs = get_urls()
     assert len(url_pairs) == 0
 
-@patch('db.models.url_pair.Url_Pair.scan')
+@patch('db.services.list_urls.Url_Pair.scan')
 def test_list_url_pairs_populated(mock_scan):
     # Setup the mock to return a populated db and validate they're properly returned in a dict
     mock_scan.return_value = [

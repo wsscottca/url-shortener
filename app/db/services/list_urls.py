@@ -13,9 +13,15 @@ def get_urls() -> Dict[int, Url_Pair_VM]:
     url_pairs = {}
     index = 0
 
-    # Get all pairs from DB and add to our dict
-    for url_pair in Url_Pair.scan():
-        url_pairs[index] = url_pair
-        index += 1
+    try:
+        # Get all pairs from DB and add to our dict
+        db_content = Url_Pair.scan()
+        if type(db_content) == BaseException:
+            raise db_content
+        for url_pair in db_content:
+            url_pairs[index] = url_pair
+            index += 1
+    except:
+        raise
 
     return url_pairs

@@ -59,3 +59,27 @@ def test_shorten_url_invalid(client: TestClient):
     response = client.post("/shorten_url?url=https%3A%2F%2Fwww.google.com%2F&short_url=testing1")
     assert response.status_code == 422
     assert response.json() == { "detail": "Short URL already exists, please enter a new short URL." }
+
+def test_shorten_url_invalid_url(client: TestClient):
+    # Attempt to create a short url with an invalid URL
+    response = client.post("/shorten_url?url=definitelynotaurl.fake&short_url=testing1")
+
+    # Validate the error is correct and relevant
+    assert response.status_code == 422
+    detail = response.json()["detail"][0]
+    assert detail["type"] == 'url_parsing'
+    assert detail["loc"] == ["query", "url"]
+    assert detail["msg"] == "Input should be a valid URL, relative URL without a base"
+    assert detail["input"] == "definitelynotaurl.fake"
+
+def test_shorten_url_invalid_short_url(client: TestClient):
+    # Attempt to create a short url with a provided short_url that is too long
+    response = client.post("/shorten_url?url=https%3A%2F%2Fwww.google.com%2F&short_url=shorturlthatisobviouslytoolong")
+
+    # Validate the error is correct and relevant
+    assert response.status_code == 422
+    detail = response.json()["detail"][0]
+    assert detail["type"] == 'string_too_long'
+    assert detail["loc"] == ["query", "short_url"]
+    assert detail["msg"] == "String should have at most 8 characters"
+    assert detail["input"] == "shorturlthatisobviouslytoolong"

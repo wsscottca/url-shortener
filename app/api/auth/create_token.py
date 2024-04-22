@@ -11,7 +11,7 @@ def create_token(data: dict, expires_delta: timedelta = timedelta(minutes=30)) -
 
     Args:
     data (dict): Data to encode
-    expires_delta (int): Hashed password to validate against
+    expires_delta (timedelta): Time for expiration
 
     Returns:
     str: Encoded JWT token

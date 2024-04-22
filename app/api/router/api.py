@@ -1,11 +1,10 @@
 import logging
 from typing import Annotated, Dict
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query, Path
 from fastapi.responses import RedirectResponse
 from pydantic import HttpUrl
 
-from api.exceptions import CredentialError
 from api.models.url_pair import Url_Pair_VM
 from api.generate_short_url import generate_short_url, validate_url_unique
 from api.user.get_current_user import get_current_user
@@ -23,7 +22,7 @@ def root():
     return {"message": "URL Shortener API"}
 
 @api_router.post("/shorten_url", status_code=201, response_model=Url_Pair_VM)
-def shorten_url(url: HttpUrl, short_url: str = None) -> Dict[str, str]:
+def shorten_url(url: HttpUrl, short_url: Annotated[str | None, Query(max_length=8)] = None) -> Dict[str, str]:
     if not short_url:
         short_url = generate_short_url()
     else:
@@ -46,7 +45,7 @@ def list_urls(token: Annotated[str, Depends(oauth2_scheme)]) -> Dict[int, Url_Pa
     return url_pairs
 
 @api_router.get("/{short_url}", status_code=307)
-def redirect(short_url: str) -> RedirectResponse:
+def redirect(short_url: Annotated[str, Path(max_length=8)]) -> RedirectResponse:
     url = get_redirect_url(short_url)
     return RedirectResponse(url)
 

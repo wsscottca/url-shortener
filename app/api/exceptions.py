@@ -32,15 +32,24 @@ class KeyError(HTTPException):
 
 class CredentialError(HTTPException):
     '''
-    Exception for when a short URL does not exist in the DB
-
-    Used for GET Requests to inform the client that the short url
-    is not in the DB so a Url_Pair cannot be retrieved
+    Exception for when there is an error authenticating a user
 
     Attributes:
         status_code (int): HTTP Status Code
         detail (str): Message to be sent to the client detailing the error
     '''
     def __init__(self, status_code: int, detail: any):
+        self.status_code = status_code
+        self.detail = detail
+
+class InputError(HTTPException):
+    '''
+    Exception for when there is an unprocessable input.
+
+    Attributes:
+        status_code (int): HTTP Status Code
+        detail (str): Message to be sent to the client detailing the error
+    '''
+    def __init__(self, detail: any, status_code: int = 422):
         self.status_code = status_code
         self.detail = detail

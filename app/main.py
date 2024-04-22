@@ -1,10 +1,9 @@
-import asyncio
 import logging
 from fastapi import FastAPI
-from tests.perform_tests import perform_tests
 from api.router.api import api_router
 from api.router.auth import auth_router
 from api.router.user import user_router
+from tests.perform_tests import perform_tests
 
 app = FastAPI()
 

@@ -1,8 +1,9 @@
+''' Module provides a create token function used for authorization '''
+
 from datetime import datetime, timezone, timedelta
-from typing import Any
 from jose import jwt
 
-from api.auth.dependencies import ALGORITHM, SECRET_KEY
+from app.api.auth.dependencies import ALGORITHM, SECRET_KEY
 
 
 def create_token(data: dict, expires_delta: timedelta = timedelta(minutes=30)) -> str:
@@ -22,6 +23,5 @@ def create_token(data: dict, expires_delta: timedelta = timedelta(minutes=30)) -
 
     # add expiration to data to encode
     to_encode.update({"exp": expires})
-
     token = jwt.encode(to_encode, key=SECRET_KEY, algorithm=ALGORITHM)
     return token

@@ -1,4 +1,6 @@
-from api.auth.dependencies import password_context
+''' Module provides a hash password function used for safe storage in db '''
+
+from app.api.auth.dependencies import password_context
 
 def hash_password(password: str) -> str:
     '''

@@ -1,3 +1,5 @@
+''' Module contains User DB model '''
+
 from pynamodb.models import Model
 from pynamodb.attributes import UnicodeAttribute, BooleanAttribute
 
@@ -12,8 +14,10 @@ class User(Model):
         disabled (BooleanAttribute): user's account status
     '''
     class Meta:
+        ''' Metadata for DB '''
+        region = 'us-west-1'
         table_name = 'user'
-    
+
     username = UnicodeAttribute(hash_key=True)
     password = UnicodeAttribute()
     group = UnicodeAttribute()

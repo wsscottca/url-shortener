@@ -1,5 +1,7 @@
-from api import exceptions
-from db.models.user import User
+''' Module contains DB service for if a user is unique '''
+
+from app.api import exceptions
+from app.db.models.user import User
 
 
 def validate_user_unique(username: str) -> str:
@@ -19,7 +21,8 @@ def validate_user_unique(username: str) -> str:
     # If it does, raise a KeyExistsError
     try:
         User.get(username)
+        # if we get a user from the username we cannot enter a new user without causing a collision
+        raise exceptions.KeyExistsError(422,
+                                "Username already exists, please select a different username.")
     except User.DoesNotExist:
         return username
-    else:
-        raise exceptions.KeyExistsError(422, "Username already exists, please select a different username.")

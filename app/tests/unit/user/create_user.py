@@ -1,12 +1,15 @@
+''' Unit tests for creating a user '''
+
 from unittest.mock import patch
 import pytest
-from api import exceptions
-from api.router.user import create_user
+from app.api.exceptions import KeyExistsError
+from app.api.router.user import create_user
 
-@patch('api.router.user.User')
-@patch('api.router.user.validate_user_unique')
-@patch('api.router.user.hash_password')
+@patch('app.api.router.user.User')
+@patch('app.api.router.user.validate_user_unique')
+@patch('app.api.router.user.hash_password')
 def test_signup(mock_hash, mock_validate, mock_user):
+    ''' Test a successful sign up '''
     # Mock our dependencies
     # Fake hash mock
     mock_hash.return_value = "######"
@@ -24,18 +27,20 @@ def test_signup(mock_hash, mock_validate, mock_user):
     assert "username" in json_dict
     assert json_dict["msg"] == "User created successfully"
 
-@patch('api.router.user.User')
-@patch('api.router.user.validate_user_unique')
-@patch('api.router.user.hash_password')
+@patch('app.api.router.user.User')
+@patch('app.api.router.user.validate_user_unique')
+@patch('app.api.router.user.hash_password')
 def test_signup_collision(mock_hash, mock_validate, mock_user):
+    ''' Test an attempted sign up that causes a collision '''
     # Mock our dependencies
     # Fake hash mock
     mock_hash.return_value = "######"
     # Mock throwing a validation error because the user "already exists"
-    mock_validate.side_effect = exceptions.KeyExistsError(422, "Username already exists, please select a different username.")
+    mock_validate.side_effect = KeyExistsError(422,
+        "Username already exists, please select a different username.")
     # Fake dict response from DB
     mock_user.save.return_value = {"mocked": True}
 
     # Ensure our function raises the proper error
-    with pytest.raises(exceptions.KeyExistsError):
+    with pytest.raises(KeyExistsError):
         create_user(username = "test1", password = "test1")

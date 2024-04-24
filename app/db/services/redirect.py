@@ -1,5 +1,7 @@
-from db.models.url_pair import Url_Pair
-import api.exceptions as exceptions
+''' Module contains DB service from getting the redirect url '''
+
+from app.api.exceptions import KeyDoesNotExistError
+from app.db.models.url_pair import UrlPair
 
 def get_redirect_url(short_url: str) -> str:
     '''
@@ -15,7 +17,7 @@ def get_redirect_url(short_url: str) -> str:
         str: The original url to redirect to
     '''
     try:
-        url_pair = Url_Pair.get(short_url)
+        url_pair = UrlPair.get(short_url)
         return url_pair.url
-    except Url_Pair.DoesNotExist:
-        raise exceptions.KeyError(422, "Short url does not exist.")
+    except UrlPair.DoesNotExist as exc:
+        raise KeyDoesNotExistError(422, "Short url does not exist.") from exc

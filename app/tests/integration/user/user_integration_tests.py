@@ -1,10 +1,18 @@
+''' User integration tests '''
+
 from fastapi.testclient import TestClient
 
-from tests.integration.user.authenticate_user import test_authenticate_user, test_authenticate_user_invalid
-from tests.integration.user.create_user import test_signup, test_signup_invalid, test_signup_invalid_content_type, test_signup_long_password, test_signup_long_username, test_signup_missing_password, test_signup_missing_username, test_signup_short_password, test_signup_short_username
-from tests.integration.user.get_user import test_get_user, test_get_user_expired, test_get_user_invalid
+from app.tests.integration.user.authenticate_user import (test_authenticate_user,
+    test_authenticate_user_invalid)
+from app.tests.integration.user.create_user import (test_signup,
+    test_signup_invalid, test_signup_invalid_content_type, test_signup_long_password,
+    test_signup_long_username, test_signup_missing_password, test_signup_missing_username,
+    test_signup_short_password, test_signup_short_username)
+from app.tests.integration.user.get_user import (test_get_user,
+    test_get_user_expired, test_get_user_invalid)
 
 def user_integration_tests(client: TestClient):
+    ''' Runs all user related integration tests '''
 
     test_signup(client)
     test_signup_invalid(client)

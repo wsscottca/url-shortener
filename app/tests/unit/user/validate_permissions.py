@@ -1,8 +1,8 @@
 import pytest
-from api.auth.hash_password import hash_password
-from api.exceptions import CredentialError
-from api.user.validate_permissions import validate_user_permissions
-from db.models.user import User
+from app.api.auth.hash_password import hash_password
+from app.api.exceptions import CredentialError
+from app.api.user.validate_permissions import validate_user_permissions
+from app.db.models.user import User
 
 
 def test_validate_permissions():

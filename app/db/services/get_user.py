@@ -1,5 +1,7 @@
-import api.exceptions as ex
-from db.models.user import User
+
+
+import app.api.exceptions as ex
+from app.db.models.user import User
 
 def get_user(username: str) -> User:
     '''
@@ -17,5 +19,6 @@ def get_user(username: str) -> User:
     try:
         user = User.get(username)
         return user
-    except User.DoesNotExist:
-        raise ex.KeyError(422, "User does not exist.")
+    except User.DoesNotExist as exc:
+        raise ex.KeyDoesNotExistError(422, "User does not exist.") from exc
+    

@@ -1,9 +1,11 @@
+''' Main module containing app, routers, and tests '''
+
 import logging
 from fastapi import FastAPI
-from api.router.api import api_router
-from api.router.auth import auth_router
-from api.router.user import user_router
-from tests.perform_tests import perform_tests
+from app.api.router.api import api_router
+from app.api.router.auth import auth_router
+from app.api.router.user import user_router
+from app.tests.perform_tests import perform_tests
 
 app = FastAPI()
 

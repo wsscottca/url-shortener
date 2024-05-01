@@ -1,13 +1,14 @@
-from pydantic import BaseModel
-from db.models.url_pair import Url_Pair
-from db.models.user import User
+''' Module creates the tables for the DB models '''
 
-def create_table(item: BaseModel) -> None:
+from app.db.models.url_pair import UrlPair
+from app.db.models.user import User
+
+def create_table(item: User | UrlPair) -> None:
     ''' Check if the table exists, if not create it'''
     if not item.exists():
         item.create_table(wait=True, read_capacity_units=1, write_capacity_units=1)
 
-''' CREATE TABLES '''
+# CREATE TABLES
 # url_pairs table
-create_table(Url_Pair)
+create_table(UrlPair)
 create_table(User)

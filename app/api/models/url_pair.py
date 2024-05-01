@@ -1,8 +1,11 @@
+''' Module contains the UrlPairVM used by the routes for proper SwaggerUI docs '''
+
 from pydantic import BaseModel
 
-class Url_Pair_VM(BaseModel):
+class UrlPairVM(BaseModel):
     '''
-    Url Pair View Model extends pydantic BaseModel for SwaggerUI docs to have contextual information about the Url pair 
+    Url Pair View Model 
+    extends pydantic BaseModel for SwaggerUI docs
     
     Attributes:
         short_url (str): short url used as key

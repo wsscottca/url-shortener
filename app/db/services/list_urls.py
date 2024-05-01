@@ -1,9 +1,11 @@
+''' Module containts supporting DB service for list_urls route. '''
+
 from typing import Dict
 
-from api.models.url_pair import Url_Pair_VM
-from db.models.url_pair import Url_Pair
+from app.api.models.url_pair import UrlPairVM
+from app.db.models.url_pair import UrlPair
 
-def get_urls() -> Dict[int, Url_Pair_VM]:
+def get_urls() -> Dict[int, UrlPairVM]:
     '''
     Return all short url - original url pairs currently in the DB
     
@@ -13,15 +15,10 @@ def get_urls() -> Dict[int, Url_Pair_VM]:
     url_pairs = {}
     index = 0
 
-    try:
-        # Get all pairs from DB and add to our dict
-        db_content = Url_Pair.scan()
-        if type(db_content) == BaseException:
-            raise db_content
-        for url_pair in db_content:
-            url_pairs[index] = url_pair
-            index += 1
-    except:
-        raise
+    # Get all pairs from DB and add to our dict
+    db_content = UrlPair.scan()
+    for url_pair in db_content:
+        url_pairs[index] = url_pair
+        index += 1
 
     return url_pairs

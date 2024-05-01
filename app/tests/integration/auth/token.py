@@ -1,32 +1,34 @@
+''' Module includes integration tests for Tokens '''
+
 from datetime import datetime, timedelta, timezone
-import logging
 
 from fastapi.testclient import TestClient
 from jose import ExpiredSignatureError, JWTError, jwt
 import pytest
-from api.auth.create_token import create_token
-from api.auth.decode_token import decode_token
-from api.auth.dependencies import ALGORITHM, SECRET_KEY, TOKEN_EXPIRE_MINUTES
-from api.models.token import Token
+from app.api.auth.create_token import create_token
+from app.api.auth.decode_token import decode_token
+from app.api.auth.dependencies import ALGORITHM, SECRET_KEY, TOKEN_EXPIRE_MINUTES
+from app.api.models.token import Token
 
 def test_create_token():
-    # Create a fake token
+    '''Create a fake token'''
     token_expiration = timedelta(minutes=TOKEN_EXPIRE_MINUTES)
     token = create_token(data={"sub": "test1"}, expires_delta=token_expiration)
-    assert type(token) == str
+    assert isinstance(token, str)
     # Test that it is a valid token by decoding it outside the bounds of our api
     assert jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)["sub"] == "test1"
 
 def test_create_token_expired():
-    # Create a fake token
+    '''Create a fake expired token'''
     token_expiration = timedelta(minutes=-TOKEN_EXPIRE_MINUTES)
     token = create_token(data={"sub": "test1"}, expires_delta=token_expiration)
-    assert type(token) == str
+    assert isinstance(token, str)
     # Test that it is an expired token by decoding it outside the bounds of our api
     with pytest.raises(ExpiredSignatureError):
         assert jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)["sub"] == "test1"
 
 def test_decode_token():
+    ''' Test that we properly decode a token '''
     # Create a fake token (outside our api)
     expires = datetime.now(timezone.utc) + timedelta(minutes=5)
     token = jwt.encode({"sub": "test1", "exp": expires}, key=SECRET_KEY, algorithm=ALGORITHM)
@@ -34,6 +36,7 @@ def test_decode_token():
     assert decode_token(token)["sub"] == "test1"
 
 def test_decode_token_expired():
+    ''' Test that we properly raise an expired error when passed an expired token '''
     # Create a fake token (outside our api)
     expires = datetime.now(timezone.utc) - timedelta(minutes=5)
     token = jwt.encode({"sub": "test1", "exp": expires}, key=SECRET_KEY, algorithm=ALGORITHM)
@@ -42,12 +45,14 @@ def test_decode_token_expired():
         decode_token(token)
 
 def modify_token(token):
+    ''' Function to tamper with a token for testing '''
     modified = "".split(token)
     modified[len(modified)//2] = "?"
     modified = "".join(modified)
     return modified
 
 def test_decode_token_modified():
+    ''' Test that an error is thrown when the token has been tampered with '''
     # Create a fake token (outside our api)
     expires = datetime.now(timezone.utc) + timedelta(minutes=5)
     token = jwt.encode({"sub": "test1", "exp": expires}, key=SECRET_KEY, algorithm=ALGORITHM)
@@ -56,10 +61,12 @@ def test_decode_token_modified():
         decode_token(modify_token(token))
 
 def test_token(client: TestClient):
-    # Test that our route properly creates a token when given the correct data
-    response = client.post("/token", data={"username": "test", "password": "password", "grant_type": "password"},
+    '''Test that our route properly creates a token when given the correct data'''
+    response = client.post("/token",
+                           data={"username": "test", "password": "password",
+                                 "grant_type": "password"},
                            headers={"content-type": "application/x-www-form-urlencoded"})
-    
+
     assert response.status_code == 200
     response_data = response.json()
     assert "access_token" in response_data
@@ -67,7 +74,7 @@ def test_token(client: TestClient):
     return Token(access_token=response_data["access_token"], token_type=response_data["token_type"])
 
 def test_token_missing_username(client: TestClient):
-    # Test that our route properly identifies a missing username
+    '''Test that our route properly identifies a missing username'''
     response = client.post("/token", data={"password": "test", "grant_type": "password"},
                            headers={"content-type": "application/x-www-form-urlencoded"})
 
@@ -78,7 +85,7 @@ def test_token_missing_username(client: TestClient):
     assert detail["msg"] == "Field required"
 
 def test_token_missing_password(client: TestClient):
-    # Test that our route properly identifies a missing password
+    '''Test that our route properly identifies a missing password'''
     response = client.post("/token", data={"username": "test", "grant_type": "password"},
                            headers={"content-type": "application/x-www-form-urlencoded"})
 
@@ -89,8 +96,10 @@ def test_token_missing_password(client: TestClient):
     assert detail["msg"] == "Field required"
 
 def test_token_invalid_content_type(client: TestClient):
-    # Test that our route properly creates a token when given the correct data
-    response = client.post("/token", data={"username": "test", "password": "test", "grant_type": "password"},
+    '''Test that our route properly creates a token when given the correct data'''
+    response = client.post("/token",
+                           data={"username": "test", "password": "test",
+                                 "grant_type": "password"},
                            headers={"content-type": "application/json"})
 
     # Ensure the message and status code are correct and relevant
@@ -108,8 +117,10 @@ def test_token_invalid_content_type(client: TestClient):
     assert missing_password["msg"] == "Field required"
 
 def test_token_wrong_grant(client: TestClient):
-    # Test that our route properly creates a token when given the correct data
-    response = client.post("/token", data={"username": "test", "password": "test", "grant_type": "authorization_code"},
+    '''Test that our route properly creates a token when given the correct data'''
+    response = client.post("/token",
+                           data={"username": "test", "password": "test",
+                                 "grant_type": "authorization_code"},
                            headers={"content-type": "application/x-www-form-urlencoded"})
 
     # Verify the error is specific to the grant type being incorrect
@@ -121,8 +132,10 @@ def test_token_wrong_grant(client: TestClient):
     assert detail["input"] == "authorization_code"
 
 def test_token_invalid_username_short(client: TestClient):
-    # Test that our route properly identifies a missing username
-    response = client.post("/token", data={"username": "sho", "password": "test", "grant_type": "password"},
+    '''Test that our route properly identifies a short username'''
+    response = client.post("/token",
+                           data={"username": "sho", "password": "test",
+                                 "grant_type": "password"},
                            headers={"content-type": "application/x-www-form-urlencoded"})
 
     assert response.status_code == 422
@@ -130,8 +143,10 @@ def test_token_invalid_username_short(client: TestClient):
     assert detail == "Username not within length bounds. Username must be between 4-16 characters."
 
 def test_token_invalid_username_long(client: TestClient):
-    # Test that our route properly identifies a missing username
-    response = client.post("/token", data={"username": "longusernamethatisinvalid", "password": "test", "grant_type": "password"},
+    '''Test that our route properly identifies a long username'''
+    response = client.post("/token",
+                           data={"username": "longusernamethatisinvalid", "password": "test",
+                                 "grant_type": "password"},
                            headers={"content-type": "application/x-www-form-urlencoded"})
 
     assert response.status_code == 422
@@ -139,8 +154,10 @@ def test_token_invalid_username_long(client: TestClient):
     assert detail == "Username not within length bounds. Username must be between 4-16 characters."
 
 def test_token_invalid_password_short(client: TestClient):
-    # Test that our route properly identifies a missing username
-    response = client.post("/token", data={"username": "test", "password": "shortpa", "grant_type": "password"},
+    '''Test that our route properly identifies a short password'''
+    response = client.post("/token",
+                           data={"username": "test", "password": "shortpa",
+                                 "grant_type": "password"},
                            headers={"content-type": "application/x-www-form-urlencoded"})
 
     assert response.status_code == 422
@@ -148,8 +165,11 @@ def test_token_invalid_password_short(client: TestClient):
     assert detail == "Password not within length bounds. Password must be between 8-32 characters."
 
 def test_token_invalid_password_long(client: TestClient):
-    # Test that our route properly identifies a missing username
-    response = client.post("/token", data={"username": "test", "password": "longpasswordthatisinvalidasitistoolong", "grant_type": "password"},
+    '''Test that our route properly identifies a long password'''
+    response = client.post("/token",
+                           data={"username": "test",
+                                 "password": "longpasswordthatisinvalidasitistoolong",
+                                 "grant_type": "password"},
                            headers={"content-type": "application/x-www-form-urlencoded"})
 
     assert response.status_code == 422

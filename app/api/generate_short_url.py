@@ -1,9 +1,8 @@
-import logging
+''' Module contains function to generate a short url '''
+
 from shortuuid import ShortUUID
-from api import exceptions
-from db.services.validate_url_unique import validate_url_unique
-
-
+from app.api import exceptions
+from app.db.services.validate_url_unique import validate_url_unique
 
 def generate_short_url() -> str:
     '''
@@ -22,3 +21,5 @@ def generate_short_url() -> str:
             return short_url
         except exceptions.KeyExistsError:
             short_url = None
+
+    return short_url

@@ -1,4 +1,6 @@
-from api.auth.dependencies import password_context
+''' Module includes verify password function to validate a password against a hash '''
+
+from app.api.auth.dependencies import password_context
 
 def verify_password(password: str, hashed_pass: str) -> bool:
     '''

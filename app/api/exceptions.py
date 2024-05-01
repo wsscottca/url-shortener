@@ -1,3 +1,5 @@
+''' Module contains all exceptions used by the API '''
+
 from fastapi import HTTPException
 
 class KeyExistsError(HTTPException):
@@ -14,8 +16,9 @@ class KeyExistsError(HTTPException):
     def __init__(self, status_code: int, detail: any):
         self.status_code = status_code
         self.detail = detail
+        super().__init__(status_code, detail)
 
-class KeyError(HTTPException):
+class KeyDoesNotExistError(HTTPException):
     '''
     Exception for when an item does not exist in the DB
 
@@ -29,6 +32,7 @@ class KeyError(HTTPException):
     def __init__(self, status_code: int, detail: any):
         self.status_code = status_code
         self.detail = detail
+        super().__init__(status_code, detail)
 
 class CredentialError(HTTPException):
     '''
@@ -41,6 +45,7 @@ class CredentialError(HTTPException):
     def __init__(self, status_code: int, detail: any):
         self.status_code = status_code
         self.detail = detail
+        super().__init__(status_code, detail)
 
 class InputError(HTTPException):
     '''
@@ -53,3 +58,4 @@ class InputError(HTTPException):
     def __init__(self, detail: any, status_code: int = 422):
         self.status_code = status_code
         self.detail = detail
+        super().__init__(status_code, detail)

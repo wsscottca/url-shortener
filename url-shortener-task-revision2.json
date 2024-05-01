@@ -1,0 +1,71 @@
+{
+    "taskDefinitionArn": "arn:aws:ecs:us-west-1:471112563802:task-definition/url-shortener-task:2",
+    "containerDefinitions": [
+        {
+            "name": "url-shortener-web-app",
+            "image": "471112563802.dkr.ecr.us-west-1.amazonaws.com/url-shortener-web-app:latest",
+            "cpu": 0,
+            "portMappings": [
+                {
+                    "name": "url-shortener-web-app-8000-tcp",
+                    "containerPort": 8000,
+                    "hostPort": 8000,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
+            "essential": true,
+            "environment": [],
+            "environmentFiles": [
+                {
+                    "value": "arn:aws:s3:::url-shortener-env-bucket/.env",
+                    "type": "s3"
+                }
+            ],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "ulimits": [],
+            "systemControls": []
+        }
+    ],
+    "family": "url-shortener-task",
+    "executionRoleArn": "arn:aws:iam::471112563802:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "revision": 2,
+    "volumes": [],
+    "status": "ACTIVE",
+    "requiresAttributes": [
+        {
+            "name": "com.amazonaws.ecs.capability.ecr-auth"
+        },
+        {
+            "name": "ecs.capability.env-files.s3"
+        },
+        {
+            "name": "ecs.capability.execution-role-ecr-pull"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+        },
+        {
+            "name": "ecs.capability.task-eni"
+        }
+    ],
+    "placementConstraints": [],
+    "compatibilities": [
+        "EC2",
+        "FARGATE"
+    ],
+    "requiresCompatibilities": [
+        "EC2"
+    ],
+    "cpu": "1024",
+    "memory": "3072",
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
+    "registeredAt": "2024-04-24T00:30:41.313Z",
+    "registeredBy": "arn:aws:sts::471112563802:assumed-role/AWSReservedSSO_AdministratorAccess_8b412fb0c3d38c6e/wsscottca-iam",
+    "tags": []
+}

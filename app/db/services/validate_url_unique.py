@@ -1,5 +1,7 @@
-from api import exceptions
-from db.models.url_pair import Url_Pair
+''' Module includes DB service for validating a short URL is unique '''
+
+from app.api.exceptions import KeyExistsError
+from app.db.models.url_pair import UrlPair
 
 
 def validate_url_unique(short_url: str) -> str:
@@ -18,8 +20,8 @@ def validate_url_unique(short_url: str) -> str:
     # Validate if the provided or generated short url already exists
     # If it does, raise a KeyExistsError
     try:
-        Url_Pair.get(short_url)
-    except Url_Pair.DoesNotExist:
+        UrlPair.get(short_url)
+        # If we get a pair from the short URL we would have a collision if adding it again
+        raise KeyExistsError(422, "Short URL already exists, please enter a new short URL.")
+    except UrlPair.DoesNotExist:
         return short_url
-    else:
-        raise exceptions.KeyExistsError(422, "Short URL already exists, please enter a new short URL.")

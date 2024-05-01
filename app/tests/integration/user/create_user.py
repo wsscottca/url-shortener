@@ -1,11 +1,12 @@
-import logging
+''' Integration tests for creating a user '''
+
 from fastapi.testclient import TestClient
-from db.services.get_user import get_user
-from db.models.user import User
+from app.db.services.get_user import get_user
+from app.db.models.user import User
 
 
 def test_signup(client: TestClient):
-    # Test our route when given the proper information
+    ''' Test our route when given the proper information '''
     response = client.post('/signup', data={"username": "test2", "password": "test2password"},
                            headers={"content-type": "application/x-www-form-urlencoded"})
     assert response.status_code == 201
@@ -15,21 +16,23 @@ def test_signup(client: TestClient):
 
     # Also verify by ensuring the user was saved to the database
     created_user = get_user("test2")
-    assert type(created_user) == User
+    assert isinstance(created_user, User)
     assert created_user.username == "test2"
     created_user.delete()
-    
+
 def test_signup_invalid(client: TestClient):
-    # Test our route when the username causes a collision
+    ''' Test our route when the username causes a collision '''
     response = client.post('/signup', data={"username": "test1", "password": "test2password"},
                         headers={"content-type": "application/x-www-form-urlencoded"})
 
     # Ensure the message and status code are correct and relevant
     assert response.status_code == 422
-    assert response.json() == { "detail": "Username already exists, please select a different username." }
+    assert response.json() == {
+        "detail": "Username already exists, please select a different username." 
+        }
 
 def test_signup_missing_password(client: TestClient):
-    # Test our route when the password is missing from the data
+    ''' Test our route when the password is missing from the data '''
     response = client.post('/signup', data={"username": "test4"},
                         headers={"content-type": "application/x-www-form-urlencoded"})
 
@@ -41,7 +44,7 @@ def test_signup_missing_password(client: TestClient):
     assert payload["msg"] == "Field required"
 
 def test_signup_missing_username(client: TestClient):
-    # Test our route when the username causes a collision
+    '''Test our route when the username is missing from the data'''
     response = client.post('/signup', data={"password": "test4"},
                         headers={"content-type": "application/x-www-form-urlencoded"})
 
@@ -53,7 +56,7 @@ def test_signup_missing_username(client: TestClient):
     assert payload["msg"] == "Field required"
 
 def test_signup_invalid_content_type(client: TestClient):
-    # Test our route when the username causes a collision
+    ''' Test our route when the content type is incorrect '''
     response = client.post('/signup', data={"username": "test1", "password": "test2"},
                         headers={"content-type": "application/json"})
 
@@ -72,8 +75,9 @@ def test_signup_invalid_content_type(client: TestClient):
     assert missing_password["msg"] == "Field required"
 
 def test_signup_long_username(client: TestClient):
-    # Test our route when the username causes a collision
-    response = client.post('/signup', data={"username": "thisusernameistoolong", "password": "test2"},
+    '''Test our route when the username is too long'''
+    response = client.post('/signup',
+                        data={"username": "thisusernameistoolong", "password": "test2"},
                         headers={"content-type": "application/x-www-form-urlencoded"})
     assert response.status_code == 422
     detail = response.json()["detail"][0]
@@ -83,8 +87,10 @@ def test_signup_long_username(client: TestClient):
     assert detail["input"] == "thisusernameistoolong"
 
 def test_signup_long_password(client: TestClient):
-    # Test our route when the username causes a collision
-    response = client.post('/signup', data={"username": "test4", "password": "thisisaverylongpasswordthatwillnotgetaccepted"},
+    '''Test our route when the password is too long'''
+    response = client.post('/signup',
+                        data={"username": "test4",
+                              "password": "thisisaverylongpasswordthatwillnotgetaccepted"},
                         headers={"content-type": "application/x-www-form-urlencoded"})
     assert response.status_code == 422
     detail = response.json()["detail"][0]
@@ -94,7 +100,7 @@ def test_signup_long_password(client: TestClient):
     assert detail["input"] == "thisisaverylongpasswordthatwillnotgetaccepted"
 
 def test_signup_short_username(client: TestClient):
-    # Test our route when the username causes a collision
+    '''Test our route when the username is too short'''
     response = client.post('/signup', data={"username": "sho", "password": "test2"},
                         headers={"content-type": "application/x-www-form-urlencoded"})
     assert response.status_code == 422
@@ -105,7 +111,7 @@ def test_signup_short_username(client: TestClient):
     assert detail["input"] == "sho"
 
 def test_signup_short_password(client: TestClient):
-    # Test our route when the username causes a collision
+    '''Test our route when the password is too short'''
     response = client.post('/signup', data={"username": "test4", "password": "short"},
                         headers={"content-type": "application/x-www-form-urlencoded"})
     assert response.status_code == 422

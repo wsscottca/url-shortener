@@ -1,0 +1,40 @@
+services:
+  app:
+    container_name: web
+    image: wsscottca/url-shortener-web-app:latest
+    build: .
+    env_file:
+      - ./.env
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "1"
+        max-size: "100k"
+    develop:
+      watch:
+        - action: sync
+          path: ./app
+          target: /code
+
+  nginx:
+    restart: unless-stopped
+    image: nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+      # - "443:443"
+    # environment:
+    #   - CERTBOT_EMAIL=youremail@gmail.com
+    volumes:
+      - ./nginx:/etc/nginx/user_conf.d:ro
+      # - letsencrypt:/etc/letsencrypt
+    depends_on:
+      - app
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100k"
+        max-file: "1"

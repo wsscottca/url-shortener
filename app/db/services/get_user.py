@@ -1,4 +1,4 @@
-
+''' Module gets a user from the DB '''
 
 import app.api.exceptions as ex
 from app.db.models.user import User
@@ -21,4 +21,3 @@ def get_user(username: str) -> User:
         return user
     except User.DoesNotExist as exc:
         raise ex.KeyDoesNotExistError(422, "User does not exist.") from exc
-    

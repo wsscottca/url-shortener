@@ -1,10 +1,10 @@
 ''' Integration tests for getting the current user '''
 
 from datetime import datetime, timedelta, timezone
-from jose import jwt
 from fastapi.testclient import TestClient
-from app.api.auth.dependencies import ALGORITHM, SECRET_KEY
+from jose import jwt
 from app.tests.integration.auth.token import test_token
+from app.api.auth.dependencies import ALGORITHM, SECRET_KEY
 
 
 def test_get_user(client: TestClient):

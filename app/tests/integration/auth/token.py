@@ -108,13 +108,13 @@ def test_token_invalid_content_type(client: TestClient):
     missing_password = response.json()["detail"][1]
 
     # As the content-type is incorrect the data will be missing
-    assert missing_username["type"] == "missing"
-    assert "username" in missing_username['loc']
-    assert missing_username["msg"] == "Field required"
-
     assert missing_password["type"] == "missing"
     assert "password" in missing_password['loc']
     assert missing_password["msg"] == "Field required"
+
+    assert missing_username["type"] == "missing"
+    assert "username" in missing_username['loc']
+    assert missing_username["msg"] == "Field required"
 
 def test_token_wrong_grant(client: TestClient):
     '''Test that our route does not allow creation of a token with the wrong grant type'''

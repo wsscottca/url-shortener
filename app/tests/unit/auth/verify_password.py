@@ -14,7 +14,7 @@ def test_verify_password(mocked_context):
     hashed_password = "$2b$12$.FDIB5slObexXIGvn/u2huruXUGNEdlvu3Or4JZIpWpuwFTOTJXR."
     verified = verify_password(password, hashed_password)
     mocked_context.verify.assert_called_once_with(password, hashed_password)
-    assert verified == True
+    assert verified is True
 
 @patch('app.api.auth.verify_password.password_context')
 def test_verify_password_invalid(mocked_context):

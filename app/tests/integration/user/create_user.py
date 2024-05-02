@@ -75,7 +75,7 @@ def test_signup_invalid_content_type(client: TestClient):
     assert missing_password["msg"] == "Field required"
 
 def test_signup_long_username(client: TestClient):
-    '''Test our route when the username is too long'''
+    '''Test our route when the username is too long and returns an unprocessable entity'''
     response = client.post('/signup',
                         data={"username": "thisusernameistoolong", "password": "test2"},
                         headers={"content-type": "application/x-www-form-urlencoded"})
@@ -87,7 +87,7 @@ def test_signup_long_username(client: TestClient):
     assert detail["input"] == "thisusernameistoolong"
 
 def test_signup_long_password(client: TestClient):
-    '''Test our route when the password is too long'''
+    '''Test our route when the password is too long and returns an unprocessable entity'''
     response = client.post('/signup',
                         data={"username": "test4",
                               "password": "thisisaverylongpasswordthatwillnotgetaccepted"},
@@ -100,7 +100,7 @@ def test_signup_long_password(client: TestClient):
     assert detail["input"] == "thisisaverylongpasswordthatwillnotgetaccepted"
 
 def test_signup_short_username(client: TestClient):
-    '''Test our route when the username is too short'''
+    '''Test our route when the username is too short and returns an unprocessable entity'''
     response = client.post('/signup', data={"username": "sho", "password": "test2"},
                         headers={"content-type": "application/x-www-form-urlencoded"})
     assert response.status_code == 422
@@ -111,7 +111,7 @@ def test_signup_short_username(client: TestClient):
     assert detail["input"] == "sho"
 
 def test_signup_short_password(client: TestClient):
-    '''Test our route when the password is too short'''
+    '''Test our route when the password is too short and returns an unprocessable entity'''
     response = client.post('/signup', data={"username": "test4", "password": "short"},
                         headers={"content-type": "application/x-www-form-urlencoded"})
     assert response.status_code == 422

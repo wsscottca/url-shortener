@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: amazon-linux-2023
     strategy:
       matrix:
         python-version: ["3.10", "3.11", "3.12"]
@@ -20,4 +20,4 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        pylint $(git ls-files '*.py')
+        pylint --rcfile=pylintrc $(git ls-files '*.py')

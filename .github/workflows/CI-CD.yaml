@@ -31,7 +31,7 @@ jobs:
           tags: wsscottca/url-shortener-web-app:latest
           labels: ${{ steps.meta.outputs.labels }}
   deploy:
-    runs-on: amazonlinux-latest
+    runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' }}
     needs: [ build_and_push ]
     steps:

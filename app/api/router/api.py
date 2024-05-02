@@ -82,4 +82,3 @@ def redirect(short_url: Annotated[str, Path(max_length=8)]) -> RedirectResponse:
     '''
     url = get_redirect_url(short_url)
     return RedirectResponse(url)
-

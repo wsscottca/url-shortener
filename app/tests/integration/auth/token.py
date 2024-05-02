@@ -96,7 +96,7 @@ def test_token_missing_password(client: TestClient):
     assert detail["msg"] == "Field required"
 
 def test_token_invalid_content_type(client: TestClient):
-    '''Test that our route properly creates a token when given the correct data'''
+    '''Test that our route does not allow creation of a token with the wrong content type'''
     response = client.post("/token",
                            data={"username": "test", "password": "test",
                                  "grant_type": "password"},
@@ -117,7 +117,7 @@ def test_token_invalid_content_type(client: TestClient):
     assert missing_password["msg"] == "Field required"
 
 def test_token_wrong_grant(client: TestClient):
-    '''Test that our route properly creates a token when given the correct data'''
+    '''Test that our route does not allow creation of a token with the wrong grant type'''
     response = client.post("/token",
                            data={"username": "test", "password": "test",
                                  "grant_type": "authorization_code"},

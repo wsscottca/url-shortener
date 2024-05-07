@@ -1,6 +1,6 @@
 services:
   app:
-    container_name: web
+    container_name: app
     image: wsscottca/url-shortener-web-app:latest
     build: .
     env_file:
@@ -21,7 +21,7 @@ services:
 
   nginx:
     restart: unless-stopped
-    image: nginx
+    image: nginx:latest
     container_name: nginx
     ports:
       - "80:80"
@@ -29,7 +29,7 @@ services:
     # environment:
     #   - CERTBOT_EMAIL=youremail@gmail.com
     volumes:
-      - ./nginx:/etc/nginx/user_conf.d:ro
+      - ./nginx:/etc/nginx/conf.d:ro
       # - letsencrypt:/etc/letsencrypt
     depends_on:
       - app

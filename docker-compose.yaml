@@ -2,7 +2,7 @@ services:
   app:
     container_name: app
     image: wsscottca/url-shortener-web-app:latest
-    build: ./
+    build: ./app
     env_file:
       - ./.env
     ports:
@@ -17,8 +17,8 @@ services:
       watch:
         - action: sync
           path: ./app
-          target: /code
-  
+          target: /app
+
   caddy:
     container_name: caddy
     restart: unless-stopped

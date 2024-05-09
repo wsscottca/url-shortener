@@ -2,7 +2,9 @@ services:
   app:
     container_name: app
     image: wsscottca/url-shortener-web-app:latest
-    build: .
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
     env_file:
       - ./.env
     ports:
@@ -18,23 +20,22 @@ services:
         - action: sync
           path: ./app
           target: /code
-
-  nginx:
+  
+  caddy:
+    container_name: caddy
     restart: unless-stopped
-    image: nginx:latest
-    container_name: nginx
+    build:
+      context: ./caddy
+      dockerfile: ./Dockerfile
     ports:
-      - "80:80"
-      # - "443:443"
-    # environment:
-    #   - CERTBOT_EMAIL=youremail@gmail.com
+      - 80:80
+      - 443:443
     volumes:
-      - ./nginx:/etc/nginx/conf.d:ro
-      # - letsencrypt:/etc/letsencrypt
+      - ./data/caddy_data:/data
+      - ./data/caddy_config:/config
     depends_on:
       - app
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "100k"
-        max-file: "1"
+    environment:
+      PROXY_BACKEND: app
+      PROXY_PORT: 8000
+      DOMAIN: ${DOMAIN}

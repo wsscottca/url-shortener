@@ -2,9 +2,7 @@ services:
   app:
     container_name: app
     image: wsscottca/url-shortener-web-app:latest
-    build:
-      context: ./
-      dockerfile: ./Dockerfile
+    build: ./
     env_file:
       - ./.env
     ports:
@@ -24,9 +22,7 @@ services:
   caddy:
     container_name: caddy
     restart: unless-stopped
-    build:
-      context: ./caddy
-      dockerfile: ./Dockerfile
+    build: ./caddy
     ports:
       - 80:80
       - 443:443
@@ -39,3 +35,7 @@ services:
       PROXY_BACKEND: app
       PROXY_PORT: 8000
       DOMAIN: ${DOMAIN}
+
+volumes:
+  caddy_data:
+  caddy_config:

@@ -1,1 +1,0 @@
-{"type":"http-01","url":"https://acme.zerossl.com/v2/DV90/chall/YFeVzwvYM8YvRfJGpWYObA","status":"pending","token":"TyuGP6ni0-dQkGwAK8UA2_rg-ViKl4q4DLFwYFQqL4c","keyAuthorization":"TyuGP6ni0-dQkGwAK8UA2_rg-ViKl4q4DLFwYFQqL4c.NsaLArPpRuYFK7ZK74k7ySdF-aBYY07vIMyTD0vC_ek","identifier":{"type":"dns","value":"ec2-54-183-133-161.us-west-1.compute.amazonaws.com"}}

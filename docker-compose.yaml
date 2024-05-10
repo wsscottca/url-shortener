@@ -22,6 +22,7 @@ services:
   caddy:
     container_name: caddy
     restart: unless-stopped
+    image: wsscottca/url-shortener-web-app-caddy:latest
     build: ./caddy
     ports:
       - 80:80

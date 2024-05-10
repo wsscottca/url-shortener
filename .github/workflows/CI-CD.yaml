@@ -17,18 +17,31 @@ jobs:
           logout: true
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_ACCESS_KEY }}
-      - name: Extract metadata (labels, tags, etc.) for Docker
+      - name: Extract metadata (labels, tags, etc.) for Docker - app
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: wsscottca/url-shortener-web-app
-      - name: Build and push Docker image
+      - name: Build and push Docker image - app
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./app
           file: ./Dockerfile
           push: true
           tags: wsscottca/url-shortener-web-app:latest
+          labels: ${{ steps.meta.outputs.labels }}
+      - name: Extract metadata (labels, tags, etc.) for Docker - caddy
+        id: meta2
+        uses: docker/metadata-action@v5
+        with:
+          images: wsscottca/url-shortener-web-app-caddy
+      - name: Build and push Docker image - caddy
+        uses: docker/build-push-action@v5
+        with:
+          context: ./caddy
+          file: ./Dockerfile
+          push: true
+          tags: wsscottca/url-shortener-web-app-caddy:latest
           labels: ${{ steps.meta.outputs.labels }}
   deploy:
     runs-on: ubuntu-latest

@@ -26,7 +26,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./app
-          file: ./Dockerfile
+          file: ./app/Dockerfile
           push: true
           tags: wsscottca/url-shortener-web-app:latest
           labels: ${{ steps.meta.outputs.labels }}
@@ -39,7 +39,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./caddy
-          file: ./Dockerfile
+          file: ./caddy/Dockerfile
           push: true
           tags: wsscottca/url-shortener-web-app-caddy:latest
           labels: ${{ steps.meta.outputs.labels }}

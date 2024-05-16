@@ -1,2 +1,0 @@
-nss-tools=3.90.0
-libnss3-tools=3.100

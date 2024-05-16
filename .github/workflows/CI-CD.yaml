@@ -65,6 +65,7 @@ jobs:
             username: ${{ secrets.USERNAME }}
             key: ${{ secrets.KEY }}
             script: |
+              export DOMAIN=${DOMAIN}
               docker-compose down
               docker rmi -f $(docker images -q)
               docker-compose pull

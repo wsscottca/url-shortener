@@ -6,4 +6,4 @@ class Settings(BaseSettings):
     ''' Settings that defines server host '''
     SERVER_HOST: str
 
-settings = Settings(SERVER_HOST="https://127.0.0.1:8000/")
+settings = Settings(SERVER_HOST="https://shrtnurl.com/")

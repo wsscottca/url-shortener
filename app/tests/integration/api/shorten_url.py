@@ -6,6 +6,7 @@ from app.api.generate_short_url import generate_short_url
 from app.db.models.url_pair import UrlPair
 from app.api.exceptions import KeyExistsError
 from app.db.services.validate_url_unique import validate_url_unique
+from app.settings import settings
 
 current_db_state = {
   "587ec2a0": "https://www.google.com/",
@@ -51,7 +52,7 @@ def test_shorten_url_valid(client: TestClient):
     # and that the response returns the created pair
     assert response.status_code == 201
     assert response.json() == {
-                            "short_url": "https://127.0.0.1:8000/testing1",
+                            "short_url": f"{settings.SERVER_HOST}" + "testing1",
                             "url": current_db_state["testing1"]
                             }
 

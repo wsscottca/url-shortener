@@ -1,5 +1,7 @@
 ''' Module contains the UrlPairVM used by the routes for proper SwaggerUI docs '''
 
+from typing import Annotated
+from fastapi import Query
 from pydantic import BaseModel
 
 class UrlPairVM(BaseModel):
@@ -13,3 +15,5 @@ class UrlPairVM(BaseModel):
     '''
     short_url: str
     url: str
+
+ShortUrl = Annotated[str, Query(max_length=8)]

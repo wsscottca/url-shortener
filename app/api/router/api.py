@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, Query, Path
 from fastapi.responses import RedirectResponse
 from pydantic import HttpUrl
 
-from app.api.models.url_pair import UrlPairVM
+from app.api.models.url_pair import ShortUrl, UrlPairVM
 from app.api.generate_short_url import generate_short_url, validate_url_unique
 from app.api.user.get_current_user import get_current_user
 from app.api.user.validate_permissions import validate_user_permissions
@@ -52,7 +52,7 @@ def shorten_url(url: HttpUrl,
 
 @api_router.get("/list_urls")
 def list_urls(token: Annotated[str, Depends(oauth2_scheme)]) -> \
-    Dict[UrlPairVM.short_url, UrlPairVM.url]:
+    Dict[ShortUrl, HttpUrl]:
     '''
     List URLs route, requires a user that is correctly authenticated 
     and has the correct permissions

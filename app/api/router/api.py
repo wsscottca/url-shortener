@@ -51,7 +51,8 @@ def shorten_url(url: HttpUrl,
         }
 
 @api_router.get("/list_urls")
-def list_urls(token: Annotated[str, Depends(oauth2_scheme)]) -> Dict[UrlPairVM.short_url, UrlPairVM.url]:
+def list_urls(token: Annotated[str, Depends(oauth2_scheme)]) -> \
+    Dict[UrlPairVM.short_url, UrlPairVM.url]:
     '''
     List URLs route, requires a user that is correctly authenticated 
     and has the correct permissions

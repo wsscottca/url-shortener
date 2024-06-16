@@ -2,10 +2,12 @@
 
 from typing import Dict
 
-from app.api.models.url_pair import UrlPairVM
+from pydantic import HttpUrl
+
+from app.api.models.url_pair import ShortUrl
 from app.db.models.url_pair import UrlPair
 
-def get_urls() -> Dict[UrlPairVM.short_url, UrlPairVM.url]:
+def get_urls() -> Dict[ShortUrl, HttpUrl]:
     '''
     Return all short url - original url pairs currently in the DB
     

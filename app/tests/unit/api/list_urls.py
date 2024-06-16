@@ -28,6 +28,6 @@ def test_list_url_pairs_populated(mock_scan):
     url_pairs = get_urls()
 
     assert len(url_pairs) == 2
-    assert url_pairs.keys() == {0,1}
-    assert url_pairs[0].short_url == "12345678"
-    assert url_pairs[1].url == "https://existing-url2.com"
+    assert url_pairs.keys() == { "12345678","12345679"}
+    assert url_pairs["12345678"] == "https://existing-url.com"
+    assert url_pairs["12345679"] == "https://existing-url2.com"

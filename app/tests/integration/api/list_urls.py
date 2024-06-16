@@ -11,7 +11,7 @@ def test_list_urls(client: TestClient):
     response = client.get("/list_urls",
                         headers={"Authorization": f"Bearer {test_token(client).access_token}"})
     assert response.status_code == 200
-    assert response.json()["0"] == {"short_url": "587ec2a0", "url": "https://www.google.com/"}
+    assert response.json()["587ec2a0"] == "https://www.google.com/"
 
 def test_list_urls_expired_token(client: TestClient):
     ''' Function tests route with an expired token '''

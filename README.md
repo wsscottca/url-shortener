@@ -217,5 +217,3 @@ curl -H "Authorization: Bearer your_token" "https://shrtnurl.com/users/me"
   "disabled": false
 }
 ```
-
-This README should provide a comprehensive guide for developers to understand and use your URL Shortener API effectively.

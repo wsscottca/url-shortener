@@ -1,6 +1,9 @@
 ''' Authenticate user unit tests '''
 from unittest.mock import patch
 
+import pytest
+
+from app.api.exceptions import CredentialError
 from app.api.user.authenticate_user import authenticate_user
 from app.db.models.user import User
 
@@ -31,11 +34,10 @@ def test_authenticate_user_invalid(mock_get, mock_validate):
     # Mock our get to return a user "from the db"
     mock_get.return_value = User(username="test", password="test", group="user", disabled=False)
     # Mock our validate to be False as though the wrong password was given
-    mock_validate.return_value = False
+    mock_validate.return_value = CredentialError(401, "Invalid Password.")
 
-    authenticated = authenticate_user("test", "test")
-    mock_validate.assert_called_once()
-    mock_get.assert_called_once()
-
-    # Ensure we did not authenicate the attempt
-    assert authenticated is False
+    # Ensure our function raises the proper error
+    with pytest.raises(CredentialError):
+        authenticate_user("test", "test1")
+        mock_validate.assert_called_once()
+        mock_get.assert_called_once()

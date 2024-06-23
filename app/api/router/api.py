@@ -61,7 +61,7 @@ def list_urls(token: Annotated[str, Depends(oauth2_scheme)]) -> \
         token (oauth2_scheme): Password Bearer JWT
 
     Returns:
-        Dict[int, UrlPairVM]: JSONable dict of the count and Url Pair
+        Dict[ShortUrl, HttpUrl]: JSONable dict of the Url Pairs
     '''
     user = get_current_user(token)
     validate_user_permissions(user, "admin")

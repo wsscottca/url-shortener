@@ -12,7 +12,7 @@ def get_urls() -> Dict[ShortUrl, HttpUrl]:
     Return all short url - original url pairs currently in the DB
     
     Returns:
-        Dict[int, Url_Pair_VM]: All short url - original url pairs, indexed
+        Dict[ShortUrl, HttpUrl]: All short url - original url pairs
     '''
     url_pairs = {}
 

@@ -34,7 +34,7 @@ def test_authenticate_user_invalid(mock_get, mock_validate):
     # Mock our get to return a user "from the db"
     mock_get.return_value = User(username="test", password="test", group="user", disabled=False)
     # Mock our validate to be False as though the wrong password was given
-    mock_validate.return_value = CredentialError(401, "Invalid Password.")
+    mock_validate.side_effect = CredentialError(401, "Invalid Password.")
 
     # Ensure our function raises the proper error
     with pytest.raises(CredentialError):

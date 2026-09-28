@@ -1,4 +1,5 @@
 # URL Shortener API
+# NOTE - No Longer Deployed
 
 Welcome to the URL Shortener API! This FastAPI application allows you to shorten URLs, list all shortened URLs, redirect using short URLs, and manage user authentication and authorization.
 
